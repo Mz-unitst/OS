@@ -4,7 +4,7 @@
 
 ### 捕获鼠标中断
 
-1. kernel/chr_drv/console.c
+1. kernel/chr_drv/console.c 添加中断
 
    ```c
    extern void mouse_interrupt(void);
