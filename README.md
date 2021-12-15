@@ -79,7 +79,8 @@ mouse_interrupt:
 
       boot/setup.s  中8259A屏蔽了所有中断（ICW1所有位置1），应解开
 
-      ![image-20211215185945237](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215185945237.png)
+![image-20211215185945237](https://user-images.githubusercontent.com/56508903/146183038-d2ab9afe-7cc0-4512-bf19-fc338dc5c11e.png)
+
 
       ```assembly
       	outb_p(inb_p(0x21)&0xF9,0x21);！合并了原来的fd和需要的fb为f9，两位均置零 11111001
@@ -114,7 +115,8 @@ addl $4,%esp
 
 2.  鼠标输入数据的格式
 
-![image-20211214200624501](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211214200624501.png)
+![image-20211214200624501](https://user-images.githubusercontent.com/56508903/146182957-dbed1913-81c9-48d5-b0f2-9c1201ab96dd.png)
+
 
 | 二进制位 | 含义与作用                                              |
 | -------- | ------------------------------------------------------- |
