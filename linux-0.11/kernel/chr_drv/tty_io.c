@@ -48,6 +48,16 @@
 #define O_NLRET(tty)	_O_FLAG((tty),ONLRET)
 #define O_LCUC(tty)	_O_FLAG((tty),OLCUC)
 
+
+static unsigned char mouse_input_count = 0;
+static unsigned char mouse_left_down;
+static unsigned char mouse_right_down;
+static unsigned char mouse_left_move;
+static unsigned char mouse_down_move;
+
+static int mouse_x_position =10;
+static int mouse_y_position =10;
+
 struct tty_struct tty_table[] = {
 	{
 		{ICRNL,		/* change incoming CR to NL */
@@ -348,3 +358,36 @@ void do_tty_interrupt(int tty)
 void chr_dev_init(void)
 {
 }
+
+void readmouse(int mousecode)
+{
+	if(mousecode==0xFA)
+	{
+		mouse_input_count=1;
+		return;
+	}
+switch(mouse_input_count)
+{
+case 1:
+	mouse_left_down=(mousecode &0x01)==0x01;
+	mouse_right_down=(mousecode &0x02)==0x02;
+	mouse_left_move=(mousecode & 0x10)==0x10;
+	mouse_down_move=(mousecode & 0x20)==0x20;
+	mouse_input_count++;
+	break;
+case 2:
+	if(mouse_left_move) mouse_x_position +=(int)(0xFFFFFF00|mousecode);
+	if(mouse_x_position>100) mouse_x_position=100;
+	if(mouse_x_position<0) mouse_x_position=0;
+	mouse_input_count++;
+	break;
+case 3:
+	if(mouse_down_move) mouse_y_position +=(int)(0xFFFFFF00|mousecode);
+	if(mouse_y_position>100) mouse_y_position=100;
+	if(mouse_y_position<0) mouse_y_position=0;
+	break;
+}
+
+}
+
+

@@ -11,10 +11,9 @@
  */
 
 #include <linux/config.h>
-
 .text
 .globl keyboard_interrupt
-
+.globl mouse_interrupt
 /*
  * these are for the keyboard read functions
  */
@@ -34,6 +33,36 @@ e0:	.byte 0
  *  keyboard scan-code and converts it into the appropriate
  *  ascii character(s).
  */
+
+
+
+mouse_interrupt:
+	pushl %eax
+	pushl %ebx
+	pushl %ecx
+	pushl %edx
+	push %ds
+
+	movl $0x10,%eax
+	mov %ax,%ds
+	xor %eax,%eax
+	inb $0x60,%al
+	pushl %eax
+	call readmouse
+	addl $4,%esp
+
+	movb $0x20,%al
+	outb %al,$0xA0 
+	outb %al,$0x20
+
+	pop %ds
+	popl %edx
+	popl %ecx
+	popl %ebx
+	popl %eax
+	iret
+
+
 keyboard_interrupt:
 	pushl %eax
 	pushl %ebx
@@ -426,6 +455,8 @@ shift_map:
 	.byte 0,0,0,0,0,0,0	/* 4F-55 */
 	.byte '>
 	.fill 10,1,0
+
+
 
 alt_map:
 	.byte 0,0

@@ -54,6 +54,7 @@
 #define NPAR 16
 
 extern void keyboard_interrupt(void);
+extern void mouse_interrupt(void);
 
 static unsigned char	video_type;		/* Type of display being used	*/
 static unsigned long	video_num_columns;	/* Number of text columns	*/
@@ -75,6 +76,8 @@ static unsigned long	state=0;
 static unsigned long	npar,par[NPAR];
 static unsigned long	ques=0;
 static unsigned char	attr=0x07;
+
+
 
 static void sysbeep(void);
 
@@ -680,11 +683,23 @@ void con_init(void)
 	bottom	= video_num_lines;
 
 	gotoxy(ORIG_X,ORIG_Y);
+
+	outb_p(0xA8,0x64); //允许鼠标操作
+	outb_p(0xD4,0x64); //给 0x64 端口发送 0xD4，表示接下来给 0x60 的命令是给鼠标的
+	outb_p(0xF4,0x60); //设置鼠标，允许鼠标向主机自动发送数据包
+	outb_p(0x60,0x64); //给 0x64 端口发送 0x60，表示接下来给 0x60 的命令是给 i8042 的
+	outb_p(0x47,0x60); //设置 i8042 寄存器，允许鼠标接口及其中断
+
 	set_trap_gate(0x21,&keyboard_interrupt);
-	outb_p(inb_p(0x21)&0xfd,0x21);
+	set_trap_gate(0x2c,&mouse_interrupt);
+
+	outb_p(inb_p(0x21)&0xF9,0x21);
+	outb_p(inb_p(0xA1)&0xEF,0xA1);
+
 	a=inb_p(0x61);
 	outb_p(a|0x80,0x61);
 	outb(a,0x61);
+
 }
 /* from bsd-net-2: */
 
@@ -708,3 +723,5 @@ static void sysbeep(void)
 	/* 1/8 second */
 	beepcount = HZ/8;	
 }
+
+

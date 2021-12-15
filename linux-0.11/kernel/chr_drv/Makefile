@@ -33,7 +33,6 @@ chr_drv.a: $(OBJS)
 
 keyboard.s: keyboard.S ../../include/linux/config.h
 	$(CPP) -traditional keyboard.S -o keyboard.s
-
 clean:
 	rm -f core *.o *.a tmp_make keyboard.s
 	for i in *.c;do rm -f `basename $$i .c`.s;done
