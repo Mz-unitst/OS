@@ -182,7 +182,7 @@ addl $4,%esp
 
    ### 阶段成果展示
    
-   ![image-20211215194918740](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215194918740.png)
+![image-20211215194918740](https://user-images.githubusercontent.com/56508903/146183085-0a565fa4-0692-4a07-bf8c-37d67279a7e1.png)
    
    
 
