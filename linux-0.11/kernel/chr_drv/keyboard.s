@@ -1,5 +1,5 @@
 # 1 "keyboard.S"
-# 1 "/home/mz/OS/linux-0.11/kernel/chr_drv//"
+# 1 "/home/mz/Desktop/oslab/linux-0.11/kernel/chr_drv//"
 # 1 "<built-in>"
 # 1 "<command line>"
 # 1 "keyboard.S"
@@ -42,6 +42,7 @@
 # 47 "../../include/linux/config.h"
 
 # 14 "keyboard.S" 2
+
 .text
 .globl keyboard_interrupt
 .globl mouse_interrupt
@@ -301,7 +302,7 @@ func_table:
 	.long 0x455b5b1b,0x465b5b1b,0x475b5b1b,0x485b5b1b
 	.long 0x495b5b1b,0x4a5b5b1b,0x4b5b5b1b,0x4c5b5b1b
 
-# 323 "keyboard.S"
+# 324 "keyboard.S"
 
 key_map:
 	.byte 0,27
@@ -352,7 +353,7 @@ alt_map:
 	.byte '|
 	.fill 10,1,0
 
-# 480 "keyboard.S"
+# 481 "keyboard.S"
 
 
 

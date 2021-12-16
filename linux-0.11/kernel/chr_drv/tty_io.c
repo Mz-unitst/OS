@@ -360,6 +360,7 @@ void chr_dev_init(void)
 
 void readmouse(int mousecode)
 {
+	//printk("233\n");
 	if(mousecode==0xFA)
 	{
 		mouse_input_count=1;

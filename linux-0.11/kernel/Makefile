@@ -26,7 +26,7 @@ CPP	=gcc-3.4 -E -nostdinc -I../include
 
 OBJS  = sched.o system_call.o traps.o asm.o fork.o \
 	panic.o printk.o vsprintf.o sys.o exit.o \
-	signal.o mktime.o
+	signal.o mktime.o init_graphics.o
 
 kernel.o: $(OBJS)
 	$(LD) -m elf_i386 -r -o kernel.o $(OBJS)
@@ -81,3 +81,5 @@ traps.s traps.o: traps.c ../include/string.h ../include/linux/head.h \
   ../include/linux/mm.h ../include/signal.h ../include/linux/kernel.h \
   ../include/asm/system.h ../include/asm/segment.h ../include/asm/io.h
 vsprintf.s vsprintf.o: vsprintf.c ../include/stdarg.h ../include/string.h
+init_graphics.s init_graphi.o:init_graphics.c ../include/linux/kernel.h\
+../include/asm/io.h

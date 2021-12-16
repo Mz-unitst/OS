@@ -129,6 +129,7 @@
 #define __NR_ssetmask	69
 #define __NR_setreuid	70
 #define __NR_setregid	71
+#define __NR_init_graphics 72
 
 #define _syscall0(type,name) \
 type name(void) \
@@ -247,6 +248,7 @@ pid_t wait(int * wait_stat);
 int write(int fildes, const char * buf, off_t count);
 int dup2(int oldfd, int newfd);
 int getppid(void);
+int init_graphics(void);
 pid_t getpgrp(void);
 pid_t setsid(void);
 

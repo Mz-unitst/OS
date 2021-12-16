@@ -11,6 +11,7 @@
  */
 
 #include <linux/config.h>
+
 .text
 .globl keyboard_interrupt
 .globl mouse_interrupt
