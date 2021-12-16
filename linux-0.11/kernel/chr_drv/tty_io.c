@@ -13,7 +13,6 @@
 #include <ctype.h>
 #include <errno.h>
 #include <signal.h>
-
 #define ALRMMASK (1<<(SIGALRM-1))
 #define KILLMASK (1<<(SIGKILL-1))
 #define INTMASK (1<<(SIGINT-1))
