@@ -12,6 +12,7 @@ _syscall0(void,init_graphics)
 
 int main(void)
 {
+init_gtaphics();
 char *p=vga_graph_memstart;
 int i,j,x_pos=20,y_pos=20;
 for(i=0;i<vga_graph_memsize;i++)
