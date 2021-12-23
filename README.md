@@ -79,7 +79,7 @@ mouse_interrupt:
 
       boot/setup.s  中8259A屏蔽了所有中断（ICW1所有位置1），应解开
 
-    ![image-20211215185945237](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215185945237.png)
+   ![8259A](https://user-images.githubusercontent.com/56508903/147203488-fcd87cc6-cf9a-47c8-9030-f55d70b48616.png)
 
       ```assembly
       	outb_p(inb_p(0x21)&0xF9,0x21);！合并了原来的fd和需要的fb为f9，两位均置零 11111001
@@ -114,7 +114,7 @@ addl $4,%esp
 
 2.  鼠标输入数据的格式
 
-![image-20211214200624501](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211214200624501.png)
+![mousedata](https://user-images.githubusercontent.com/56508903/147203522-8edc9247-85ca-4f4c-a28a-a7ba10f7197d.png)
 | 二进制位 | 含义与作用                                              |
 | -------- | ------------------------------------------------------- |
 | 7        | Y 溢出标志位，1 表示 Y 位移量溢出                       |
@@ -179,14 +179,14 @@ addl $4,%esp
 
    ### 阶段成果展示
    
-![image-20211215194918740](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215194918740.png)
+![step1](https://user-images.githubusercontent.com/56508903/147203550-63675d36-958b-4b0a-af82-69778565c120.png)
    
 
 ## 2.显示器的图形显示模式
 
 1. 启用VGA图形模式
 
-   工作模式：![image-20211223143930131](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211223143930131.png)
+   工作模式：![VGA](https://user-images.githubusercontent.com/56508903/147203576-a5ec21e6-2125-4450-82ac-e03db69923fe.png)
 
    
 
@@ -196,7 +196,7 @@ addl $4,%esp
 
    拼装器工作模式：
 
-   ![image-20211223144404766](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211223144404766.png)
+   ![shift256](https://user-images.githubusercontent.com/56508903/147203592-fcb83669-7964-4ebe-b1fa-72bce6ba9cd5.png)
 
    r 将 4 个显存 plane 中 同一个地址处的 4 个字节按照每 4 位一组进行左移，共移出了 8 个字节，显卡会取出Byte1,3,5,7并将这四个 字节依次扫描到屏幕上形成四个像素
 
@@ -218,7 +218,7 @@ addl $4,%esp
 
       原理图：
 
-      ![image-20211223145557292](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211223145557292.png)
+      ![image-20211223145557292](https://user-images.githubusercontent.com/56508903/147203625-c038f62b-6d55-4d5c-a8e9-0ead9e8ffd00.png)
 
       
 
@@ -226,7 +226,7 @@ addl $4,%esp
 
       只需将起始地址设为0xA0000即可，现在VGA屏幕中的图像对应内存如下：
 
-      ![image-20211223150001596](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211223150001596.png)
+      ![print_screen](https://user-images.githubusercontent.com/56508903/147203682-12f9265a-e905-4d2b-8633-10eb16ccfa95.png)
 
       
 
@@ -296,6 +296,6 @@ addl $4,%esp
 
    6. 阶段成果展示：
 
-      ![image-20211223150105803](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211223150105803.png)
+      ![step2](https://user-images.githubusercontent.com/56508903/147203698-8b28bb06-65f2-44fc-a0a6-05e46a831b25.png)
 
 2. 消息驱动框架
