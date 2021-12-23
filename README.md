@@ -79,7 +79,7 @@ mouse_interrupt:
 
       boot/setup.s  中8259A屏蔽了所有中断（ICW1所有位置1），应解开
 
-      ![image-20211215185945237](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215185945237.png)
+    ![image-20211215185945237](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215185945237.png)
 
       ```assembly
       	outb_p(inb_p(0x21)&0xF9,0x21);！合并了原来的fd和需要的fb为f9，两位均置零 11111001
@@ -115,7 +115,6 @@ addl $4,%esp
 2.  鼠标输入数据的格式
 
 ![image-20211214200624501](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211214200624501.png)
-
 | 二进制位 | 含义与作用                                              |
 | -------- | ------------------------------------------------------- |
 | 7        | Y 溢出标志位，1 表示 Y 位移量溢出                       |
@@ -180,8 +179,7 @@ addl $4,%esp
 
    ### 阶段成果展示
    
-   ![image-20211215194918740](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215194918740.png)
-   
+![image-20211215194918740](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\image-20211215194918740.png)
    
 
 ## 2.显示器的图形显示模式
