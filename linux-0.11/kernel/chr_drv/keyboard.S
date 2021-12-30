@@ -38,24 +38,33 @@ e0:	.byte 0
 
 
 mouse_interrupt:
+	
 	pushl %eax
 	pushl %ebx
 	pushl %ecx
 	pushl %edx
 	push %ds
+	push %es
 
+//prepare for call readmouse ,ds is in kernel
+//call tt
 	movl $0x10,%eax
-	mov %ax,%ds
+	mov %ax,%ds 
+	mov %ax,%es
+
 	xor %eax,%eax
 	inb $0x60,%al
+	// eax store mouse data ,put into stack for readmouse's params	
 	pushl %eax
 	call readmouse
 	addl $4,%esp
 
+	// 3*EOI
 	movb $0x20,%al
 	outb %al,$0xA0 
 	outb %al,$0x20
 
+	pop %es
 	pop %ds
 	popl %edx
 	popl %ecx
@@ -65,12 +74,27 @@ mouse_interrupt:
 
 
 keyboard_interrupt:
+//call readmouse
+//call post_message
 	pushl %eax
 	pushl %ebx
 	pushl %ecx
 	pushl %edx
 	push %ds
 	push %es
+
+	//push %bp	
+	mov $0x03,%ah		
+	xor	%bh,%bh
+	int	$0x10
+	
+	
+	mov $12,%cx
+	mov	$0x0070,%bx		
+	mov	msg111,%bp
+	mov	$0x1301,%ax		
+	int	$0x10
+
 	movl $0x10,%eax
 	mov %ax,%ds
 	mov %ax,%es
@@ -95,9 +119,14 @@ e0_e1:	inb $0x61,%al
 	outb %al,$0x61
 	movb $0x20,%al
 	outb %al,$0x20
-	pushl $0
+	pushl $0 
+//tty=0 canshu ruzhan
 	call do_tty_interrupt
-	addl $4,%esp
+	addl $4,%esp 
+//diuqi canshu 0
+
+//	pop %bp
+
 	pop %es
 	pop %ds
 	popl %edx
@@ -105,6 +134,12 @@ e0_e1:	inb $0x61,%al
 	popl %ebx
 	popl %eax
 	iret
+
+msg111:
+	.byte 13,10
+	.ascii "Mouse!"
+	.byte 13,10,13,10
+
 set_e0:	movb $1,e0
 	jmp e0_e1
 set_e1:	movb $2,e0
@@ -618,3 +653,6 @@ reboot:
 	movb $0xfc,%al		/* pulse reset and A20 low */
 	outb %al,$0x64
 die:	jmp die
+
+
+

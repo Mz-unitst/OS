@@ -21,6 +21,8 @@ struct tty_queue {
 	char buf[TTY_BUF_SIZE];
 };
 
+
+
 #define INC(a) ((a) = ((a)+1) & (TTY_BUF_SIZE-1))
 #define DEC(a) ((a) = ((a)-1) & (TTY_BUF_SIZE-1))
 #define EMPTY(a) ((a).head == (a).tail)
@@ -52,7 +54,16 @@ struct tty_struct {
 	struct tty_queue secondary;
 	};
 
+struct message{
+int mid;
+int pid;
+struct message *next;
+};
+extern struct message *headd;
+extern int volatile jumpp;
 extern struct tty_struct tty_table[];
+extern struct message msg_list[];
+
 
 /*	intr=^C		quit=^|		erase=del	kill=^U
 	eof=^D		vtime=\0	vmin=\1		sxtc=\0
@@ -73,5 +84,6 @@ void rs_write(struct tty_struct * tty);
 void con_write(struct tty_struct * tty);
 
 void copy_to_cooked(struct tty_struct * tty);
+void post_message(void);
 
 #endif

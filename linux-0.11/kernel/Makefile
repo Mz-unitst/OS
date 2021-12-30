@@ -82,4 +82,4 @@ traps.s traps.o: traps.c ../include/string.h ../include/linux/head.h \
   ../include/asm/system.h ../include/asm/segment.h ../include/asm/io.h
 vsprintf.s vsprintf.o: vsprintf.c ../include/stdarg.h ../include/string.h
 init_graphics.s init_graphi.o:init_graphics.c ../include/linux/kernel.h\
-../include/asm/io.h
+../include/asm/io.h ../include/linux/tty.h

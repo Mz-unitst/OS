@@ -1,10 +1,13 @@
 #include <linux/kernel.h>
 #include<asm/io.h>
+#include "linux/tty.h"
 #define memstart 0xA0000+1360
 #define memsize 64000
 #define cursor_side 3
 #define width 320
 #define height 200
+//struct message *headd;
+int volatile jumpp;
 int sys_init_graphics()
 {
     char *p;
@@ -54,4 +57,13 @@ int sys_init_graphics()
         }
 
     return 0;
+}
+
+int sys_get_message()
+{
+	//msgg=headd;
+	//if(headd->mid!=1)return;
+	//headd=headd->next;
+	if(jumpp>0) --jumpp;
+	return jumpp;
 }

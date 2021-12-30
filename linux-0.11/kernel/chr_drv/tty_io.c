@@ -48,6 +48,7 @@
 #define O_LCUC(tty)	_O_FLAG((tty),OLCUC)
 
 
+int volatile jumpp;
 static unsigned char mouse_input_count = 0;
 static unsigned char mouse_left_down;
 static unsigned char mouse_right_down;
@@ -56,7 +57,10 @@ static unsigned char mouse_down_move;
 
 static int mouse_x_position =10;
 static int mouse_y_position =10;
+static int  fcreate=0;
 
+//struct message *headd;
+//struct message *cur;
 struct tty_struct tty_table[] = {
 	{
 		{ICRNL,		/* change incoming CR to NL */
@@ -110,6 +114,8 @@ struct tty_queue * table_list[]={
 	&tty_table[1].read_q, &tty_table[1].write_q,
 	&tty_table[2].read_q, &tty_table[2].write_q
 	};
+
+
 
 void tty_init(void)
 {
@@ -302,7 +308,7 @@ int tty_write(unsigned channel, char * buf, int nr)
 	static int cr_flag=0;
 	struct tty_struct * tty;
 	char c, *b=buf;
-
+	//printk("\ttest\n");
 	if (channel>2 || nr<0) return -1;
 	tty = channel + tty_table;
 	while (nr>0) {
@@ -358,22 +364,46 @@ void chr_dev_init(void)
 {
 }
 
+
 void readmouse(int mousecode)
 {
+	if(fcreate==0)
+{
+	fcreate=1;
+	jumpp=10;
+//    headd=(struct message*)malloc(sizeof(struct message));
+	//headd->next=NULL;
+//	headd->pid=-1;// self
+}
+	jumpp++;
 	//printk("233\n");
 	if(mousecode==0xFA)
 	{
 		mouse_input_count=1;
-		return;
+	//jumpp++;
+		//return;
 	}
 switch(mouse_input_count)
 {
+	//printk("233\n");
+//struct task_struct task;
+//struct message headd->pid=1;
+//headd->mid=1;
+
 case 1:
 	mouse_left_down=(mousecode &0x01)==0x01;
 	mouse_right_down=(mousecode &0x02)==0x02;
 	mouse_left_move=(mousecode & 0x10)==0x10;
 	mouse_down_move=(mousecode & 0x20)==0x20;
 	mouse_input_count++;
+	
+	if(mouse_left_down){
+	//struct message *msg =malloc(sizeof(struct message));
+	//msg->mid=1;
+	//msg->pid=-1;
+	//jumpp++;
+	//post_message();
+	}
 	break;
 case 2:
 	if(mouse_left_move) mouse_x_position +=(int)(0xFFFFFF00|mousecode);
@@ -386,8 +416,30 @@ case 3:
 	if(mouse_y_position>100) mouse_y_position=100;
 	if(mouse_y_position<0) mouse_y_position=0;
 	break;
+//default: jumpp++;
+//break;
 }
 
 }
 
 
+void post_message()
+{
+//	struct message *curr;
+//	curr->next=headd->next;
+//	if(msgg==NULL)return;
+//	while(curr->next!=NULL) {
+//	curr=curr->next;
+//}
+//curr->next=msgg;
+cli();
+jumpp++;
+sti();
+return;
+}
+
+void tt()
+{
+jumpp=33;
+return ;
+}
