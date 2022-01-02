@@ -25,7 +25,7 @@ CPP	=gcc-3.4 -m32 -g -E -nostdinc -I../../include
 	-c -o $*.o $<
 
 OBJS  = tty_io.o console.o keyboard.o serial.o rs_io.o \
-	tty_ioctl.o
+	tty_ioctl.o mouse.o
 
 chr_drv.a: $(OBJS)
 	$(AR) rcs chr_drv.a $(OBJS)
@@ -33,6 +33,8 @@ chr_drv.a: $(OBJS)
 
 keyboard.s: keyboard.S ../../include/linux/config.h
 	$(CPP) -traditional keyboard.S -o keyboard.s
+mouse.s:mouse.S ../../include/linux/config.h
+	$(CPP) -traditional mouse.S -o mouse.s
 clean:
 	rm -f core *.o *.a tmp_make keyboard.s
 	for i in *.c;do rm -f `basename $$i .c`.s;done

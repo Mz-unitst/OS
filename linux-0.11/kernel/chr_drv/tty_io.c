@@ -55,10 +55,10 @@ static unsigned char mouse_right_down;
 static unsigned char mouse_left_move;
 static unsigned char mouse_down_move;
 
-static int mouse_x_position =10;
-static int mouse_y_position =10;
+static int mouse_x_position =20;
+static int mouse_y_position =20;
 static int  fcreate=0;
-
+int cnt=0;
 //struct message *headd;
 //struct message *cur;
 struct tty_struct tty_table[] = {
@@ -367,59 +367,102 @@ void chr_dev_init(void)
 
 void readmouse(int mousecode)
 {
-	if(fcreate==0)
+if(fcreate==0)
 {
 	fcreate=1;
-	jumpp=10;
-//    headd=(struct message*)malloc(sizeof(struct message));
-	//headd->next=NULL;
-//	headd->pid=-1;// self
+cnt=33;
+//mouse_input_count=0;
+	//jumpp=0;
 }
-	jumpp++;
-	//printk("233\n");
-	if(mousecode==0xFA)
-	{
-		mouse_input_count=1;
-	//jumpp++;
-		//return;
-	}
+//jumpp=mousecode;
+
+//cli();
+if(mousecode==0xFA || mouse_input_count>=4 )
+{
+	mouse_input_count=1;
+//jumpp=600;
+//jumpp=cnt;
+//jumpp+=3;
+//jumpp++;
+//post_message();
+return ;
+}
+//jumpp=0;
+if(cnt!=mousecode)
+{
+//jumpp=mousecode;
+cnt=mousecode;
+}
+//jumpp=mousecode;
 switch(mouse_input_count)
 {
-	//printk("233\n");
-//struct task_struct task;
-//struct message headd->pid=1;
-//headd->mid=1;
-
 case 1:
-	mouse_left_down=(mousecode &0x01)==0x01;
+//cuowei sheqi
+//if( (mousecode & 0xc8) == 0x08 )
+//if((mousecode & 0xc8) == 0x08)
+{
+	mouse_left_down=(mousecode &0x01) ==0x01;
 	mouse_right_down=(mousecode &0x02)==0x02;
 	mouse_left_move=(mousecode & 0x10)==0x10;
 	mouse_down_move=(mousecode & 0x20)==0x20;
 	mouse_input_count++;
-	
-	if(mouse_left_down){
-	//struct message *msg =malloc(sizeof(struct message));
-	//msg->mid=1;
-	//msg->pid=-1;
-	//jumpp++;
-	//post_message();
+//jumpp=mouse_left_move;
+	//jumpp=mousecode;  
+//	jumpp=100;
+//jumpp++;
+}
+//return 0;
+
+	//jumpp+=1;
+	//jumpp=mouse_left_down;
+//jumpp=11;
+//jumpp=mousecode;
+// you yan chi ,zai 0xfa chu wu yan chi
+	if(mouse_left_down==1 && mouse_left_move==0 && mouse_down_move==0){
+	post_message();
+	//jumpp+=10;
 	}
+//return;
+//mouse_input_count++;
 	break;
 case 2:
 	if(mouse_left_move) mouse_x_position +=(int)(0xFFFFFF00|mousecode);
 	if(mouse_x_position>100) mouse_x_position=100;
-	if(mouse_x_position<0) mouse_x_position=0;
-	mouse_input_count++;
+	if(mouse_x_position<0) mouse_x_position=10;
+//	jumpp=200;
+//jumpp=mousecode;
+//jumpp=22;
+//jumpp+=10;
+//return ;
+mouse_input_count++;
 	break;
 case 3:
+//           jumpp=33;
 	if(mouse_down_move) mouse_y_position +=(int)(0xFFFFFF00|mousecode);
 	if(mouse_y_position>100) mouse_y_position=100;
 	if(mouse_y_position<0) mouse_y_position=0;
+//157 
+//jumpp=mousecode;
+	//mouse_input_count++;
+//jumpp+=10;
+//jumpp++;
+	mouse_input_count++;
+//jumpp-=10;
+//jumpp=33;
+//jumpp++;
 	break;
-//default: jumpp++;
-//break;
+case 4:
+// gun lun ,mouse3
+//jumpp++;
+//jumpp=44;
+// zan shi bu xie
+//jumpp-=10;
+break;
 }
-
+//jumpp=mouse_left_down;
+//jumpp=mouse_input_count;
+//jumpp=mouse_x_position;
+//sti();
 }
 
 

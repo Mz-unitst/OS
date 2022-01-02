@@ -45,7 +45,7 @@
 
 .text
 .globl keyboard_interrupt
-.globl mouse_interrupt
+
 
 
 
@@ -67,41 +67,6 @@ e0:	.byte 0
 
 
 
-
-mouse_interrupt:
-	
-	pushl %eax
-	pushl %ebx
-	pushl %ecx
-	pushl %edx
-	push %ds
-	push %es
-
-//prepare for call readmouse ,ds is in kernel
-//call tt
-	movl $0x10,%eax
-	mov %ax,%ds 
-	mov %ax,%es
-
-	xor %eax,%eax
-	inb $0x60,%al
-	// eax store mouse data ,put into stack for readmouse's params	
-	pushl %eax
-	call readmouse
-	addl $4,%esp
-
-	// 3*EOI
-	movb $0x20,%al
-	outb %al,$0xA0 
-	outb %al,$0x20
-
-	pop %es
-	pop %ds
-	popl %edx
-	popl %ecx
-	popl %ebx
-	popl %eax
-	iret
 
 
 keyboard_interrupt:
@@ -337,7 +302,7 @@ func_table:
 	.long 0x455b5b1b,0x465b5b1b,0x475b5b1b,0x485b5b1b
 	.long 0x495b5b1b,0x4a5b5b1b,0x4b5b5b1b,0x4c5b5b1b
 
-# 359 "keyboard.S"
+# 324 "keyboard.S"
 
 key_map:
 	.byte 0,27
@@ -388,7 +353,7 @@ alt_map:
 	.byte '|
 	.fill 10,1,0
 
-# 516 "keyboard.S"
+# 481 "keyboard.S"
 
 
 

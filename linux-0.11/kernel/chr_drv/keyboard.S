@@ -14,7 +14,7 @@
 
 .text
 .globl keyboard_interrupt
-.globl mouse_interrupt
+
 /*
  * these are for the keyboard read functions
  */
@@ -36,41 +36,6 @@ e0:	.byte 0
  */
 
 
-
-mouse_interrupt:
-	
-	pushl %eax
-	pushl %ebx
-	pushl %ecx
-	pushl %edx
-	push %ds
-	push %es
-
-//prepare for call readmouse ,ds is in kernel
-//call tt
-	movl $0x10,%eax
-	mov %ax,%ds 
-	mov %ax,%es
-
-	xor %eax,%eax
-	inb $0x60,%al
-	// eax store mouse data ,put into stack for readmouse's params	
-	pushl %eax
-	call readmouse
-	addl $4,%esp
-
-	// 3*EOI
-	movb $0x20,%al
-	outb %al,$0xA0 
-	outb %al,$0x20
-
-	pop %es
-	pop %ds
-	popl %edx
-	popl %ecx
-	popl %ebx
-	popl %eax
-	iret
 
 
 keyboard_interrupt:

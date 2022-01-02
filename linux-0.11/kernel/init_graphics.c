@@ -64,6 +64,6 @@ int sys_get_message()
 	//msgg=headd;
 	//if(headd->mid!=1)return;
 	//headd=headd->next;
-	if(jumpp>0) --jumpp;
+	//if(jumpp>0) --jumpp;
 	return jumpp;
 }

@@ -76,7 +76,7 @@ static unsigned long	state=0;
 static unsigned long	npar,par[NPAR];
 static unsigned long	ques=0;
 static unsigned char	attr=0x07;
-
+int volatile jumpp;
 
 
 static void sysbeep(void);
@@ -685,11 +685,17 @@ void con_init(void)
 	gotoxy(ORIG_X,ORIG_Y);
 
 	outb_p(0xA8,0x64); //允许鼠标操作
+
+	outb_p(0xD4,0x64); //给 0x64 端口发送 0xD4，表示接下来给 0x60 的命令是给鼠标的
+	outb_p(0xFF,0x60);// reset mouse type to 2 dimension 
+
 	outb_p(0xD4,0x64); //给 0x64 端口发送 0xD4，表示接下来给 0x60 的命令是给鼠标的
 	outb_p(0xF4,0x60); //设置鼠标，允许鼠标向主机自动发送数据包
+
 	outb_p(0x60,0x64); //给 0x64 端口发送 0x60，表示接下来给 0x60 的命令是给 i8042 的
 	outb_p(0x47,0x60); //设置 i8042 寄存器，允许鼠标接口及其中断
 
+	
 	set_trap_gate(0x21,&keyboard_interrupt);
 	set_trap_gate(0x2c,&mouse_interrupt);
 
