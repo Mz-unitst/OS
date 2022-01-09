@@ -1,5 +1,5 @@
 # 1 "mouse.S"
-# 1 "/home/mz/OS/linux-0.11/kernel/chr_drv//"
+# 1 "/home/mz/1/linux-0.11/kernel/chr_drv//"
 # 1 "<built-in>"
 # 1 "<command line>"
 # 1 "mouse.S"
@@ -48,7 +48,14 @@ mouse_interrupt:
 	//mov %ax,%es
 
 // eax store mouse data ,put into stack for readmouse's params	
-	xor %eax,%eax
+	
+
+xor %eax,%eax
+	inb $0x60,%al	
+	pushl %eax
+	call readmouse
+	addl $4,%esp
+xor %eax,%eax
 	inb $0x60,%al	
 	pushl %eax
 	call readmouse
@@ -59,6 +66,16 @@ xor %eax,%eax
 	pushl %eax
 	call readmouse
 	addl $4,%esp
+xor %eax,%eax
+	inb $0x60,%al	
+	pushl %eax
+	call readmouse
+	addl $4,%esp
+
+
+
+
+
 
 
 	// 3*EOI

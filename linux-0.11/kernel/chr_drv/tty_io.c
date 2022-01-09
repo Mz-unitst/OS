@@ -408,7 +408,7 @@ case 1:
 	mouse_input_count++;
 //jumpp=mouse_left_move;
 	//jumpp=mousecode;  
-//	jumpp=100;
+	//jumpp+=1;
 //jumpp++;
 }
 //return 0;
@@ -457,6 +457,7 @@ case 4:
 //jumpp=44;
 // zan shi bu xie
 //jumpp-=10;
+jumpp=jumpp;
 break;
 }
 //jumpp=mouse_left_down;

@@ -131,6 +131,7 @@
 #define __NR_setregid	71
 #define __NR_init_graphics 72
 #define __NR_get_message 73
+#define __NR_repaint 74
 #define _syscall0(type,name) \
 type name(void) \
 { \
@@ -250,6 +251,7 @@ int dup2(int oldfd, int newfd);
 int getppid(void);
 int init_graphics(void);
 int get_message(void);
+int repaint(int x,int y,int h);
 pid_t getpgrp(void);
 pid_t setsid(void);
 

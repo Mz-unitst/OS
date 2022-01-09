@@ -1,7 +1,7 @@
 #include <linux/kernel.h>
 #include<asm/io.h>
 #include "linux/tty.h"
-#define memstart 0xA0000+1360
+#define memstart 0xA0000
 #define memsize 64000
 #define cursor_side 3
 #define width 320
@@ -10,8 +10,9 @@
 int volatile jumpp;
 int sys_init_graphics()
 {
-    char *p;
+    
     int i,j,x,y;
+    char *p=0xA0000;
     outb(0x05,0x3CE);
     outb(0x40,0x3CF);/* shift256=1*/
     outb(0x06,0x3CE);
@@ -46,7 +47,7 @@ int sys_init_graphics()
 
     p=memstart;
     for(i=0;i<memsize;i++) *p++=3;
-
+//3-blue 4-red 12-purple
 
     x=20;
     y=10;
@@ -66,4 +67,21 @@ int sys_get_message()
 	//headd=headd->next;
 	//if(jumpp>0) --jumpp;
 	return jumpp;
+}
+
+int sys_repaint(int x,int y,int h)
+{
+	int i,j,w;
+	char *p;
+	p=0xA0000;
+	w=3;
+	for(i=x;i<=x+w;i++)
+{	for(j=y;j<=y+h;j++)
+	{
+		p=0xA0000+j*320+i;
+		*p=12;
+	}
+}
+return 0;
+
 }
