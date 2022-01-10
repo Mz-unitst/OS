@@ -539,4 +539,4 @@ ff=1;
 
    GAME OVER:
 
-![gameover](https://user-images.githubusercontent.com/56508903/148795441-1bba34db-2af7-47d2-9a7c-398c98724e6d.png)
+   ![gameover](https://user-images.githubusercontent.com/56508903/148795441-1bba34db-2af7-47d2-9a7c-398c98724e6d.png)
