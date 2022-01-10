@@ -72,7 +72,7 @@ int sys_get_message()
 	//msgg=headd;
 	//if(headd->mid!=1)return;
 	//headd=headd->next;
-	//if(jumpp>0) --jumpp;
+	if(jumpp>0) --jumpp;
 	return jumpp;
 }
 
@@ -80,13 +80,18 @@ int sys_repaint(int x,int y,int h)
 {
 	int i,j,w;
 	char *p;
+	i=x;
+	j=y;
 	p=0xA0000;
 	w=barrier_width;
-	if(x==33 && y==33 && h==33){
+	if(i+w>320 || i<20 ) return 0;
+	if(i==33 || j==33){
+p=0xA0000;
 	for(i=0;i<memsize;i++) *p++=3;
 	return 0;
 	}
-	else if(x==44 && y==44 && h==44){
+	else if(i==44 || j==44 ){
+p=0xA0000;
 	for(i=0;i<memsize;i++) *p++=4;
 	return 0;
 	}else{
