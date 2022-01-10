@@ -4,7 +4,7 @@
 
 #### 捕获鼠标中断
 
-1. kernel/chr_drv/console.c添加中断，0.11中的unistd.h中也要加宏
+1. kernel/chr_drv/console.c添加中断，0.11中的unistd.h中也要加宏 
 
    ```c
    extern void mouse_interrupt(void);
