@@ -2,7 +2,7 @@
 
 ## 1.鼠标驱动
 
-### 捕获鼠标中断
+#### 捕获鼠标中断
 
 1. kernel/chr_drv/console.c添加中断，0.11中的unistd.h中也要加宏
 
@@ -100,7 +100,7 @@ mouse_interrupt:
       outb %al,$0x20 //向 8259A 主片发送 EOI
       ```
 
-### 鼠标输入数据的解码
+#### 鼠标输入数据的解码
 
 1.  将将鼠标输入数据 从 0x60 端口读进来，将其压栈后再调用 C 函数 readmouse
 
@@ -131,7 +131,7 @@ addl $4,%esp
 
    kernel/chr_drc/tty_io.c (不能放在console.c 中，会因为释放内核页表报错)
 
-   ```
+   ```c
    static unsigned char mouse_input_count = 0; //用来记录是鼠标输入的第几个字节的全局变量
    static unsigned char mouse_left_down; //用来记录鼠标左键是否按下
    static unsigned char mouse_right_down; //用来记录鼠标右键是否按下
@@ -140,45 +140,123 @@ addl $4,%esp
    
    static int mouse_x_position; //用来记录鼠标的 x 轴位置
    static int mouse_y_position;//用来记录鼠标的 y 轴位置
+   static int  fcreate=0;
+   int cnt=0;
+   //struct message *headd;
+   //struct message *cur;
+   //...
    //...
    //...
    void readmouse(int mousecode)
    {
-   	if(mousecode == 0xFA) //0xFA 是 i8042 鼠标命令的成功响应的 ACK 字节，参见习题
-   	{
-   	mouse_input_count = 1;
-   	return 0;
-   	}
-   switch(mouse_input_count)
-     {
-   case 1: //处理第一个字节，取出左、右键是否按下等信息
-   //与运算过滤了无关位
-   	mouse_left_down = (mousecode & 0x1) == 0x1;
-   	mouse_right_down = (mousecode & 0x2) == 0x2;
-   	mouse_left_move = (mousecode & 0x10) == 0x10;
-   	mosue_down_move = (mousecode & 0x20) == 0x20;
-   	mouse_input_count++；
-   	break;
-   case 2: //处理第二个字节，计算鼠标在 X 轴上的位置
-   	if(mouse_left_move)
-   	mouse_x_position += (int)(0xFFFFFF00 | mousecode); //此时mousecode 是一个 8 位负数的补码表示，要将其变成 32 位就需要在前面填充 1
-   	//max limit
-   	//此处的100应更改，按照分辨率更改为合适的数值
-   	if(mouse_x_position>100) mouse_x_position=100;
-   	if(mouse_x_position < 0) mouse_x_position = 0;
-   	break;
-   case 3: //处理第3个字节，计算鼠标在 Y 轴上的位置
-   	if(mouse_down_move)
-   	mouse_y_position += (int)(0xFFFFFF00 | mousecode);
-   	if(mouse_y_position > 100) mouse_y_position = 100;
-   	if(mouse_y_position < 0) mouse_y_position = 0;
-   	break;
-     }
+   if(fcreate==0)
+   {
+   	fcreate=1;
+   cnt=33;
+   //mouse_input_count=0;
+   	//jumpp=0;
+   }
+   //jumpp=mousecode;
    
+   //cli();
+   if(mousecode==0xFA || mouse_input_count>=4 )
+   {
+   //0xFA 是 i8042 鼠标命令的成功响应的 ACK 字节，应舍弃，并设置重置条件防止错位
+   	mouse_input_count=1;
+   //jumpp=600;
+   //jumpp=cnt;
+   //jumpp+=3;
+   //jumpp++;
+   //post_message();
+   return ;
+   }
+   //jumpp=0;
+   if(cnt!=mousecode)
+   {
+   //jumpp=mousecode;
+   cnt=mousecode;
+   }
+   //jumpp=mousecode;
+   switch(mouse_input_count)
+   {
+   case 1:
+   //cuowei sheqi
+   //if( (mousecode & 0xc8) == 0x08 )
+   //if((mousecode & 0xc8) == 0x08)
+   {
+   //与运算过滤了无关位
+   	mouse_left_down=(mousecode &0x01) ==0x01;
+   	mouse_right_down=(mousecode &0x02)==0x02;
+   	mouse_left_move=(mousecode & 0x10)==0x10;
+   	mouse_down_move=(mousecode & 0x20)==0x20;
+   	mouse_input_count++;
+   //jumpp=mouse_left_move;
+   	//jumpp=mousecode;  
+   	//jumpp+=1;
+   //jumpp++;
+   }
+   //return 0;
+    
+   	//jumpp+=1;
+   	//jumpp=mouse_left_down;
+   //jumpp=11;
+   //jumpp=mousecode;
+   // you yan chi ,zai 0xfa chu wu yan chi
+   	if(mouse_left_down==1 && mouse_left_move==0 && mouse_down_move==0){
+   	post_message();
+   	//jumpp+=10;
+   	}
+   //return;
+   //mouse_input_count++;
+   	break;
+   case 2:
+   //处理第二个字节，计算鼠标在 X 轴上的位置
+   //此时mousecode 是一个 8 位负数的补码表示，要将其变成 32 位就需要在前面填充 1
+   	if(mouse_left_move) mouse_x_position +=(int)(0xFFFFFF00|mousecode);
+   	if(mouse_x_position>100) mouse_x_position=100;
+   	if(mouse_x_position<0) mouse_x_position=10;
+   //	jumpp=200;
+   //jumpp=mousecode;
+   //jumpp=22;
+   //jumpp+=10;
+   //return ;
+   mouse_input_count++;
+   	break;
+   case 3:
+   //处理第3个字节，计算鼠标在 Y 轴上的位置
+   //           jumpp=33;
+   	if(mouse_down_move) mouse_y_position +=(int)(0xFFFFFF00|mousecode);
+   	if(mouse_y_position>200) mouse_y_position=200;
+   	if(mouse_y_position<0) mouse_y_position=0;
+   //157 
+   //jumpp=mousecode;
+   	//mouse_input_count++;
+   //jumpp+=10;
+   //jumpp++;
+   	mouse_input_count++;
+   //jumpp-=10;
+   //jumpp=33;
+   //jumpp++;
+   	break;
+   case 4:
+   // gun lun ,mouse3
+   //jumpp++;
+   //jumpp=44;
+   // zan shi bu xie
+   //jumpp-=10;
+   jumpp=jumpp;
+   break;
+   }
+   //jumpp=mouse_left_down;
+   //jumpp=mouse_input_count;
+   //jumpp=mouse_x_position;
+   //sti();
    }
    ```
-
-   ### 阶段成果展示
+   
+   
+   
+   #### 阶段成果展示
    
    ![step1](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step1.png)
    
@@ -186,116 +264,283 @@ addl $4,%esp
 
 ## 2.显示器的图形显示模式
 
-1. 启用VGA图形模式
+#### 1.启用VGA图形模式
 
-   工作模式：![VGA](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\VGA.png)
+工作模式：![VGA](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\VGA.png)
 
-   
 
-2. 建立像素点阵与显存之间的映射 
 
-   启用mode 0x13,即线性256色模式，分辨率为320*200，每个像素用一个字节表示，共64000个像素点，64000B，略小于64KB
+#### 2.建立像素点阵与显存之间的映射 
 
-   拼装器工作模式：
+启用mode 0x13,即线性256色模式，分辨率为320*200，每个像素用一个字节表示，共64000个像素点，64000B，略小于64KB
 
-   ![shift256](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\shift256.png)
+拼装器工作模式：
 
-   r 将 4 个显存 plane 中 同一个地址处的 4 个字节按照每 4 位一组进行左移，共移出了 8 个字节，显卡会取出Byte1,3,5,7并将这四个 字节依次扫描到屏幕上形成四个像素
+![shift256](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\shift256.png)
 
-   3. 设置屏幕分辨率
+ 将 4 个显存 plane 中 同一个地址处的 4 个字节按照每 4 位一组进行左移，共移出了 8 个字节，显卡会取出Byte1,3,5,7并将这四个 字节依次扫描到屏幕上形成四个像素
 
-      通过CRT控制器完成，工作原理：
+#### 3.设置屏幕分辨率
 
-      0）从左到右，从上到下，通过扫描线扫描到显示器上
+通过CRT控制器完成，工作原理：
 
-      1）scanline counter用来计数是第几根扫描线，从0开始则扫描输出第一行像素
+0）从左到右，从上到下，通过扫描线扫描到显示器上
 
-      2）在生成每一行像素时，horizontal counter开始工作，其经过Display Enable Skew设定的距离后开始输出像素，当其增加到End Horizontal Display后CRT停止从显存中读取数据。
+1）scanline counter用来计数是第几根扫描线，从0开始则扫描输出第一行像素
 
-      3）当一行输出完成后，horizontal counter置0，而scanline counter是否增加取决于SLDIV,默认每隔两个扫描周期后加一
+2）在生成每一行像素时，horizontal counter开始工作，其经过Display Enable Skew设定的距离后开始输出像素，当其增加到End Horizontal Display后CRT停止从显存中读取数据。
 
-      4）扫描线增加1后，显存的shift地址向后移动一行对应的字节数Offset Register * MemoryAddresses *2并重复步骤2
+3）当一行输出完成后，horizontal counter置0，而scanline counter是否增加取决于SLDIV,默认每隔两个扫描周期后加一
 
-      5）当扫描线增加到Vertical Display End后不再输出
+4）扫描线增加1后，显存的shift地址向后移动一行对应的字节数Offset Register * MemoryAddresses *2并重复步骤2
 
-      原理图：
+5）当扫描线增加到Vertical Display End后不再输出
 
-      ![pricinple](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\pricinple.png)
+原理图：
 
-   4. 开始绘制屏幕
+![pricinple](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\pricinple.png)
 
-      只需将起始地址设为0xA0000即可，现在VGA屏幕中的图像对应内存如下：
+#### 4.开始绘制屏幕
 
-      ![print_screen](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\print_screen.png)
+只需将起始地址设为0xA0000即可，现在VGA屏幕中的图像对应内存如下：
 
-      
+![print_screen](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\print_screen.png)
 
-   5.  代码如下：
 
-   图形模式初始化通过系统调用sys_init_graphicis实现，代码如下：
+
+#### 5.代码
+
+图形模式初始化通过系统调用sys_init_graphicis实现，代码如下：
+
+```c
+int volatile jumpp;
+int ff=0;
+int sys_init_graphics()
+{
+	int i,j,x,y;
+    char *p=0xA0000;
+    if(ff==0)
+{
+	outb(0x05,0x3CE);
+    outb(0x40,0x3CF);/* shift256=1*/
+    outb(0x06,0x3CE);
+    outb(0x05,0x3CF);/*0101 0xA0000*/
+    outb(0x04,0x3C4);
+    outb(0x08,0x3C5);/*0000 jilian*/
+
+
+    outb(0x01,0x3D4);
+    outb(0x4F,0x3D5);/* end horizontal display=79 ??*/
+    outb(0x03,0x3D4);
+    outb(0x82,0x3D5);/*display enable skew=0*/
+
+    outb(0x07,0x3D4);
+    outb(0x1F,0x3D5);/*vertical display end No8,9 bit=1,0*/
+    outb(0x12,0x3D4);
+    outb(0x8F,0x3D5);/*vertical display end low 7b =0x8F*/
+    outb(0x17,0x3D4);
+    outb(0xA3,0x3D5);/*SLDIV=1 ,scanline clock/2*/
+
+
+
+    outb(0x14,0x3D4);
+    outb(0x40,0x3D5);/*DW=1*/
+    outb(0x13,0x3D4);
+    outb(0x28,0x3D5);/*Offset=40, 20:bian chang*/
+
+    outb(0x0C,0x3D4);/**/
+    outb(0x00,0x3D5);/**/
+    outb(0x0D,0x3D4);/**/
+    outb(0x00,0x3D5);/*Start Address=0xA0000*/
+ff=1;
+}
+    
+    
+
+    p=memstart;
+    for(i=0;i<memsize;i++) *p++=3;
+//3-blue 4-red 12-purple
+
+    x=20;
+    y=10;
+    for(i=x-cursor_side;i<=x+cursor_side;i++)
+        for(j=y-cursor_side;j<=y+cursor_side;j++){
+            p=(char *) memstart+j*width+i;
+            *p=12;
+        }
+
+    return 0;
+}
+```
+
+#### 6.阶段成果展示：
+
+![step2](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step2.png)
+
+## 3.消息驱动框架
+
+#### 1.原理
+
+1. OS收集计算机各个地方的事件，如键盘按下，鼠标按下，网卡有数据包，时钟到时等
+
+2. 操作系统负责将各个事件做成一个数据结构并将其放入系统消息队列中
+
+3. 用户进程查看系统消息队列，当发现有消息给自己时，从中取出信息并进行处理
+
+   ![image-20220110223225883](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\queue.png)
+
+#### 2.主要工作
+
+1. 定义消息队列数据结构
+
+   原计划多进程共享队列，因为目前只有一个进程会使用这个调用，因此将原本计划的msg结构体（含mid,pid,next指针）简化为全局变量jumpp
+
+   在include/linux/tty.h处定义全局变量
 
    ```c
-#include <linux/kernel.h>
-   #include<asm/io.h>
-   #define memstart 0xA0000+1360
-   #define memsize 64000
-   #define cursor_side 3
-   #define width 320
-   #define height 200
-   int sys_init_graphics()
+   extern int volatile jumpp;
+   ```
+
+   同时在各个调用此变量的文件*.c处也要定义
+
+   ```c
+   int volatile jumpp;
+   ```
+
+   
+
+2. 实现post_message将消息放入系统消息队列中
+
+   位于kernel/chr_drv/ttyio.c
+
+   ```c
+   void post_message()
    {
-       char *p;
-       int i,j,x,y;
-       outb(0x05,0x3CE);
-       outb(0x40,0x3CF);/* shift256=1,256色，取出方式为shift*/
-       outb(0x06,0x3CE);
-       outb(0x05,0x3CF);/*0101 ,开启图形模式，起始地址0xA0000*/
-       outb(0x04,0x3C4);
-       outb(0x08,0x3C5);/*1000 四个显存片级联*/
-   
-   
-       outb(0x01,0x3D4);
-       outb(0x4F,0x3D5);/* end horizontal display=79， 320 *2 /8 -1=79*/
-       outb(0x03,0x3D4);
-       outb(0x82,0x3D5);/*display enable skew=0,经过0距离开始绘制*/
-   
-       outb(0x07,0x3D4);
-       outb(0x1F,0x3D5);/*vertical display end No8,9 bit=1,0*/
-       outb(0x12,0x3D4);
-       outb(0x8F,0x3D5);/*vertical display end low 7b =0x8F*/
-       outb(0x17,0x3D4);
-       outb(0xA3,0x3D5);/*SLDIV=1 ,scanline clock/2*/
-   
-   
-   
-       outb(0x14,0x3D4);
-       outb(0x40,0x3D5);/*DW=1，双字模式 Memory Addresses Size=4*/
-       outb(0x13,0x3D4);
-       outb(0x28,0x3D5);/*Offset=40,320/2/4=40*/
-   
-       outb(0x0C,0x3D4);/**/
-       outb(0x00,0x3D5);/**/
-       outb(0x0D,0x3D4);/**/
-       outb(0x00,0x3D5);/*Start Address=0xA0000*/
-   
-       p=memstart;
-       for(i=0;i<memsize;i++) *p++=3;
-   
-   
-       x=20;
-       y=10;
-       for(i=x-cursor_side;i<=x+cursor_side;i++)
-           for(j=y-cursor_side;j<=y+cursor_side;j++){
-               p=(char *) memstart+j*width+i;
-               *p=12;
-           }
-   
-       return 0;
+   //	struct message *curr;
+   //	curr->next=headd->next;
+   //	if(msgg==NULL)return;
+   //	while(curr->next!=NULL) {
+   //	curr=curr->next;
+   //}
+   //curr->next=msgg;
+   cli();
+   //防止鼠标移动导致疯狂中断,jumpp起飞
+   if(jumpp<=10)
+   jumpp++;
+   sti();
+   return;
    }
    ```
+
    
-   6. 阶段成果展示：
 
-      ![step2](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step2.png)
+3. 能为用户态进程提供获取系统消息队列的系统调用get_message,编写对应的内核函数sys_get_message
 
-2. 消息驱动框架
+   1. 位于kernel/init_graphics.c
+
+   ```c
+   int sys_get_message()
+   {
+   	//msgg=headd;
+   	//if(headd->mid!=1)return;
+   	//headd=headd->next;
+   	if(jumpp>0) --jumpp;
+   	return jumpp;
+   }
+   ```
+
+   
+
+4. 在readmouse函数合适地方调用post_message
+
+   位于kernel/chr_drc/tty_io.c
+
+   ```c
+   //...
+   //...
+   case 1:
+   {
+   //与运算过滤了无关位
+   	mouse_left_down=(mousecode &0x01) ==0x01;
+   	mouse_right_down=(mousecode &0x02)==0x02;
+   	mouse_left_move=(mousecode & 0x10)==0x10;
+   	mouse_down_move=(mousecode & 0x20)==0x20;
+   	mouse_input_count++;
+   }
+   	if(mouse_left_down==1 && mouse_left_move==0 && mouse_down_move==0){
+   	post_message();
+   	}
+   	//...
+   	//...
+   ```
+
+   
+
+5. 测试
+
+![image-20220110231044899](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step3_code.png)
+
+![image-20220110230900315](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step3.png)
+
+其中m的值就是用户程序调用get_message的返回值jumpp
+
+## 4.Flappy Bird
+
+#### 1.思路：小鸟：一直向下移动，鼠标左键点击小鸟会向上移动一定距离；障碍物以一定速度左移，以实现整个场景运动。
+
+#### 2.代码
+
+1. 创建所有屏幕对象
+
+2. 产生循环，定时重画屏幕
+
+   1. 刷新屏幕为蓝，33
+
+   2. 小鸟向下移动,py[0]+=10;
+
+   3. 障碍物左移,px[k]-=20;
+
+   4. 若有鼠标点击事件则小鸟向上移动py[0]-=10;
+
+   5. 判断是否GAME OVER,结束则爆红,44
+
+      ```c
+      int sys_repaint(int x,int y,int h)
+      {
+      	int i,j,w;
+      	char *p;
+      	i=x;
+      	j=y;
+      	p=0xA0000;
+      	w=barrier_width;
+      	if(i+w>=320 || i<20 ) return 0;
+      	if(i==33 || j==33){
+      p=0xA0000;
+      	for(i=0;i<memsize;i++) *p++=3;
+      	return 0;
+      	}
+      	else if(i==44 || j==44 ){
+      p=0xA0000;
+      	for(i=0;i<memsize;i++) *p++=4;
+      	return 0;
+      	}else{
+      	for(i=x;i<=x+w;i++){	
+      		for(j=y;j<=y+h;j++){
+      			p=0xA0000+j*320+i;
+      			*p=12;
+      		}
+      		}
+      }
+      return 0;
+      }
+      ```
+
+3. 最终效果
+
+   游戏中：
+
+   ![image-20220110233758644](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\game.png)
+
+   GAME OVER:
+
+![image-20220110233812587](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\gameover.png)
