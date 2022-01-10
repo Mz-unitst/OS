@@ -79,7 +79,7 @@ mouse_interrupt:
 
       boot/setup.s  中8259A屏蔽了所有中断（ICW1所有位置1），应解开
 
-      ![image-20211215185945237](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\8259A.png)
+    ![8259A](https://user-images.githubusercontent.com/56508903/148795704-803433d5-b6ab-4ec4-88a7-dea55d12ba2e.png)
 
       ```assembly
       	outb_p(inb_p(0x21)&0xF9,0x21);！合并了原来的fd和需要的fb为f9，两位均置零 11111001
@@ -114,7 +114,7 @@ addl $4,%esp
 
 2.  鼠标输入数据的格式
 
-![mousedata](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\mousedata.png)
+![mousedata](https://user-images.githubusercontent.com/56508903/148795081-392d7798-0a0d-42e4-8660-44b919b3e6ca.png)
 
 | 二进制位 | 含义与作用                                              |
 | -------- | ------------------------------------------------------- |
@@ -258,15 +258,14 @@ addl $4,%esp
    
    #### 阶段成果展示
    
-   ![step1](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step1.png)
-   
+   ![step1](https://user-images.githubusercontent.com/56508903/148795144-3674aac6-573f-4797-b2c9-0bd79f71aca4.png)
    
 
 ## 2.显示器的图形显示模式
 
 #### 1.启用VGA图形模式
 
-工作模式：![VGA](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\VGA.png)
+工作模式：![VGA](https://user-images.githubusercontent.com/56508903/148795168-529d5215-bb43-4fae-9798-052c200fa09c.png)
 
 
 
@@ -276,8 +275,7 @@ addl $4,%esp
 
 拼装器工作模式：
 
-![shift256](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\shift256.png)
-
+![shift256](https://user-images.githubusercontent.com/56508903/148795185-d0765be8-9714-418a-a7d2-6c2a65441107.png)
  将 4 个显存 plane 中 同一个地址处的 4 个字节按照每 4 位一组进行左移，共移出了 8 个字节，显卡会取出Byte1,3,5,7并将这四个 字节依次扫描到屏幕上形成四个像素
 
 #### 3.设置屏幕分辨率
@@ -298,14 +296,13 @@ addl $4,%esp
 
 原理图：
 
-![pricinple](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\pricinple.png)
+![pricinple](https://user-images.githubusercontent.com/56508903/148795928-0e2d31d2-e485-4c9e-a257-b11760f0705a.png)
 
 #### 4.开始绘制屏幕
 
 只需将起始地址设为0xA0000即可，现在VGA屏幕中的图像对应内存如下：
 
-![print_screen](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\print_screen.png)
-
+![print_screen](https://user-images.githubusercontent.com/56508903/148795273-91265cc4-6102-464e-a45a-727bf814fd1a.png)
 
 
 #### 5.代码
@@ -375,7 +372,7 @@ ff=1;
 
 #### 6.阶段成果展示：
 
-![step2](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step2.png)
+![step2](https://user-images.githubusercontent.com/56508903/148795300-abe09e93-7529-4ed0-aca0-9a24cffdfa28.png)
 
 ## 3.消息驱动框架
 
@@ -387,8 +384,7 @@ ff=1;
 
 3. 用户进程查看系统消息队列，当发现有消息给自己时，从中取出信息并进行处理
 
-   ![image-20220110223225883](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\queue.png)
-
+![queue](https://user-images.githubusercontent.com/56508903/148795333-1c2ea6fa-9e69-4c2d-a4aa-a1b467bccafe.png)
 #### 2.主要工作
 
 1. 定义消息队列数据结构
@@ -478,9 +474,9 @@ ff=1;
 
 5. 测试
 
-![image-20220110231044899](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step3_code.png)
+![step3](https://user-images.githubusercontent.com/56508903/148795371-d1ec7e33-53db-4b31-bf8a-e5092be78a66.png)
 
-![image-20220110230900315](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\step3.png)
+![step3_code](https://user-images.githubusercontent.com/56508903/148795388-a3bea52f-a842-4db8-a09b-286c352a3aca.png)
 
 其中m的值就是用户程序调用get_message的返回值jumpp
 
@@ -539,8 +535,8 @@ ff=1;
 
    游戏中：
 
-   ![image-20220110233758644](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\game.png)
+   ![game](https://user-images.githubusercontent.com/56508903/148795422-e5cad648-6060-49dc-9fdc-8e32582aaa3c.png)
 
    GAME OVER:
 
-![image-20220110233812587](C:\Users\Mz\AppData\Roaming\Typora\typora-user-images\gameover.png)
+![gameover](https://user-images.githubusercontent.com/56508903/148795441-1bba34db-2af7-47d2-9a7c-398c98724e6d.png)
