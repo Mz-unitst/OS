@@ -412,7 +412,7 @@ case 1:
 //jumpp++;
 }
 //return 0;
-
+ 
 	//jumpp+=1;
 	//jumpp=mouse_left_down;
 //jumpp=11;
@@ -476,9 +476,10 @@ void post_message()
 //	curr=curr->next;
 //}
 //curr->next=msgg;
-cli();
+//cli();
+if(jumpp<=10)
 jumpp++;
-sti();
+//sti();
 return;
 }
 

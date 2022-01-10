@@ -84,7 +84,7 @@ int sys_repaint(int x,int y,int h)
 	j=y;
 	p=0xA0000;
 	w=barrier_width;
-	if(i+w>320 || i<20 ) return 0;
+	if(i+w>=320 || i<20 ) return 0;
 	if(i==33 || j==33){
 p=0xA0000;
 	for(i=0;i<memsize;i++) *p++=3;
