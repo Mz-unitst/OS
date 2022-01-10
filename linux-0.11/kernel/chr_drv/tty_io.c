@@ -476,10 +476,10 @@ void post_message()
 //	curr=curr->next;
 //}
 //curr->next=msgg;
-//cli();
+cli();
 if(jumpp<=10)
 jumpp++;
-//sti();
+sti();
 return;
 }
 
