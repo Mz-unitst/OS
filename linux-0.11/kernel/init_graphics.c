@@ -6,14 +6,17 @@
 #define cursor_side 3
 #define width 320
 #define height 200
+#define barrier_width 10
 //struct message *headd;
 int volatile jumpp;
+int ff=0;
 int sys_init_graphics()
 {
-    
-    int i,j,x,y;
+int i,j,x,y;
     char *p=0xA0000;
-    outb(0x05,0x3CE);
+    if(ff==0)
+{
+outb(0x05,0x3CE);
     outb(0x40,0x3CF);/* shift256=1*/
     outb(0x06,0x3CE);
     outb(0x05,0x3CF);/*0101 0xA0000*/
@@ -44,6 +47,10 @@ int sys_init_graphics()
     outb(0x00,0x3D5);/**/
     outb(0x0D,0x3D4);/**/
     outb(0x00,0x3D5);/*Start Address=0xA0000*/
+ff=1;
+}
+    
+    
 
     p=memstart;
     for(i=0;i<memsize;i++) *p++=3;
@@ -74,14 +81,22 @@ int sys_repaint(int x,int y,int h)
 	int i,j,w;
 	char *p;
 	p=0xA0000;
-	w=3;
-	for(i=x;i<=x+w;i++)
-{	for(j=y;j<=y+h;j++)
-	{
-		p=0xA0000+j*320+i;
-		*p=12;
+	w=barrier_width;
+	if(x==33 && y==33 && h==33){
+	for(i=0;i<memsize;i++) *p++=3;
+	return 0;
 	}
+	else if(x==44 && y==44 && h==44){
+	for(i=0;i<memsize;i++) *p++=4;
+	return 0;
+	}else{
+	for(i=x;i<=x+w;i++){	
+		for(j=y;j<=y+h;j++){
+			p=0xA0000+j*320+i;
+			*p=12;
+		}
+		}
 }
+	
 return 0;
-
 }
